@@ -1,4 +1,4 @@
-const quotes = [
+let quotes = JSON.parse(localStorage.getItem("quotes")) || [
   {
     text: "The important thing is not to stop questioning.",
     category: "Science"
@@ -25,6 +25,7 @@ const newQuote = document.getElementById("newQuote")
      const quoteDisplay = document.getElementById("quoteDisplay")
 
      quoteDisplay.innerHTML = `<p>"${randomQuotes.text}": ${randomQuotes.category}</p>`
+     sessionStorage.setItem("lastQuote", JSON.stringify(randomQuote))
 }
 
 function createAddQuoteForm(){
@@ -43,9 +44,11 @@ function createAddQuoteForm(){
      addButton.addEventListener("click", function () {
     const newText = quoteInput.value.trim();
     const newCategory = categoryInput.value.trim();
+    
 
     if (newText && newCategory) {
       quotes.push({ text: newText, category: newCategory });
+      localStorage.setItem("quotes", JSON.stringify(quotes));
       alert("Quote added!");
       quoteInput.value = "";
       categoryInput.value = "";
@@ -62,3 +65,36 @@ function createAddQuoteForm(){
   document.body.appendChild(formContainer);
 }
 createAddQuoteForm();
+
+function exportQuotes() {
+  const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.href = url;
+  downloadAnchor.download = "quotes.json";
+  downloadAnchor.click();
+  URL.revokeObjectURL(url); // clean up
+}
+
+
+function importQuotes(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedQuotes = JSON.parse(e.target.result);
+      if (Array.isArray(importedQuotes)) {
+        quotes.push(...importedQuotes);
+        localStorage.setItem("quotes", JSON.stringify(quotes));
+        alert("Quotes imported successfully!");
+      } else {
+        alert("Invalid JSON format.");
+      }
+    } catch (err) {
+      alert("Error parsing JSON file.");
+    }
+  };
+  reader.readAsText(file);
+}
