@@ -43,22 +43,44 @@ function createAddQuoteForm() {
   const addButton = document.createElement("button");
   addButton.textContent = "Add Quote";
 
-  addButton.addEventListener("click", function () {
-    const newText = quoteInput.value.trim();
-    const newCategory = categoryInput.value.trim();
+  addButton.addEventListener("click", async function () {
+  const newText = quoteInput.value.trim();
+  const newCategory = categoryInput.value.trim();
 
-    if (newText && newCategory) {
-      quotes.push({ text: newText, category: newCategory });
-      populateCategories();
-      filterQuotes();
-      localStorage.setItem("quotes", JSON.stringify(quotes));
-      alert("Quote added!");
-      quoteInput.value = "";
-      categoryInput.value = "";
-    } else {
-      alert("Please fill in both fields.");
+  if (newText && newCategory) {
+    const newQuoteObj = { text: newText, category: newCategory };
+    quotes.push(newQuoteObj);
+    populateCategories();
+    filterQuotes();
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+
+    try {
+      const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newQuoteObj)
+      });
+
+      if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
+
+      const result = await response.json();
+      showNotification("Quote added locally and posted to server!");
+      // Optionally log or use `result`
+      console.log("Server response:", result);
+    } catch (error) {
+      showNotification("Quote added locally but failed to post to server.");
+      console.error("POST error:", error);
     }
-  });
+
+    quoteInput.value = "";
+    categoryInput.value = "";
+  } else {
+    alert("Please fill in both fields.");
+  }
+});
+
 
   formContainer.appendChild(quoteInput);
   formContainer.appendChild(categoryInput);
