@@ -229,7 +229,8 @@ async function syncQuotesWithServer() {
       document.getElementById('categoryFilter').value = savedFilter;
       filterQuotes();
 
-      showNotification("Quotes have been synced with the server and updated.");
+      showNotification("Quotes synced with server!");
+;
     }
   } catch (error) {
     console.error("Error syncing with server:", error);
