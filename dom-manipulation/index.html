@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dynamic Quote Generator</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <h1>Dynamic Quote Generator</h1>
     <div id="quoteDisplay"></div>
+    <select id="categoryFilter" onchange="filterQuotes()">
+      <option value="all">All Categories</option>
+    </select>
     <button id="newQuote" onclick="showRandomQuote()">Show New Quote</button>
     <button onclick="exportQuotes()">Export Quotes</button>
     <input type="file" accept=".json" onchange="importQuotes(event)" />
