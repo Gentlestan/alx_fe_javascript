@@ -145,7 +145,7 @@ function showNotification(message) {
 }
 
 // === Simulated server fetch (mock API) ===
-async function fetchServerQuotes() {
+async function fetchQuotesFromServer() {
   await new Promise(res => setTimeout(res, 500)); // simulate network delay
   return [
     { text: "The important thing is not to stop questioning.", category: "Science" },
