@@ -109,12 +109,12 @@ function populateCategories() {
 
 // === Filter quotes by category ===
 function filterQuotes() {
-  const selected = document.getElementById('categoryFilter').value;
-  localStorage.setItem('lastFilter', selected);
+  const selectedCategory = document.getElementById('categoryFilter').value;
+  localStorage.setItem('lastFilter', selectedCategory);
 
-  const filtered = selected === 'all'
+  const filtered = selectedCategory === 'all'
     ? quotes
-    : quotes.filter(q => q.category === selected);
+    : quotes.filter(q => q.category === selectedCategory);
 
   const display = document.getElementById('quoteDisplay');
   display.innerHTML = filtered.map(q => `<p>"${q.text}" — <em>${q.category}</em></p>`).join('');
